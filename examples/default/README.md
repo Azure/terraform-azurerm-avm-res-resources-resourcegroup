@@ -4,7 +4,7 @@
 This module is used to deploy an Azure Resource Group
 
 ```hcl
-// Importing the Azure naming module to ensure resources have unique CAF compliant names.
+# Importing the Azure naming module to ensure resources have unique CAF compliant names.
 module "naming" {
   source  = "Azure/naming/azurerm"
   version = "0.4.0"
@@ -25,8 +25,6 @@ The following requirements are needed by this module:
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.5.2)
 
 - <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.71.0)
-
-- <a name="requirement_random"></a> [random](#requirement\_random) (>= 3.5.0)
 
 ## Providers
 
@@ -51,11 +49,23 @@ Description: Required. The Azure region for deployment of the this resource.
 
 Type: `string`
 
-Default: `"usgovvirginia"`
+Default: `"eastus"`
 
 ## Outputs
 
-No outputs.
+The following outputs are exported:
+
+### <a name="output_name"></a> [name](#output\_name)
+
+Description: The name of the resource group
+
+### <a name="output_resource"></a> [resource](#output\_resource)
+
+Description: This is the full output for the resource group.
+
+### <a name="output_resource_id"></a> [resource\_id](#output\_resource\_id)
+
+Description: The resource Id of the resource group
 
 ## Modules
 
