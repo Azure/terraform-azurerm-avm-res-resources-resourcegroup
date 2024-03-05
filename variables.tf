@@ -127,7 +127,7 @@ EOT
 }
 ```
 DESCRIPTION
-validation {
+  validation {
     condition = alltrue(
       [for role in var.role_assignments :
         can(regex("^/providers/Microsoft\\.Authorization/roleDefinitions/[0-9a-fA-F-]+$", role.role_definition_id_or_name))
