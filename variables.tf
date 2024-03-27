@@ -1,24 +1,20 @@
 variable "location" {
   type        = string
-  description = <<DESCRIPTION
-  "Required. The Azure region for deployment of the this resource."
-  DESCRIPTION
+  description = "Required. The Azure region for deployment of the this resource."
 }
 
 variable "name" {
   type        = string
-  description = <<DESCRIPTION
-  "Required. The name of the this resource."
-  DESCRIPTION
+  description = "Required. The name of the this resource."
 
   validation {
     condition     = can(regex("^[a-zA-Z0-9_().-]{1,89}[a-zA-Z0-9_()-]$", var.name))
     error_message = <<ERROR_MESSAGE
-    The resource group name must meet the following requirements:
-    - Between 1 and 90 characters long. 
-    - Can only contain Alphanumerics, underscores, parentheses, hyphens, periods.
-    - Cannot end in a period
-    ERROR_MESSAGE
+  The resource group name must meet the following requirements:
+  - Between 1 and 90 characters long. 
+  - Can only contain Alphanumerics, underscores, parentheses, hyphens, periods.
+  - Cannot end in a period
+  ERROR_MESSAGE
   }
 }
 
