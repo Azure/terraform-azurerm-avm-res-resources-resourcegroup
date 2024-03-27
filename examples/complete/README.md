@@ -7,23 +7,29 @@ This module is used to deploy an Azure Resource Group
 # Importing the Azure naming module to ensure resources have unique CAF compliant names.
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = "0.4.0"
+  version = " >= 0.4.0"
 }
 
-# resource "azurerm_resource_group" "dep-rg" {
-#   location = var.location
-#   name     = "rg-complete-test"
-# }
+module "regions" {
+  source  = "Azure/regions/azurerm"
+  version = ">= 0.3.0"
+}
+
+# This allows us to randomize the region for the resource group.
+resource "random_integer" "region_index" {
+  max = length(module.regions.regions) - 1
+  min = 0
+}
 
 resource "azurerm_user_assigned_identity" "dep_uai" {
+  location            = module.resource_group.resource.location
   name                = module.naming.user_assigned_identity.name_unique
   resource_group_name = module.resource_group.resource.name
-  location            = module.resource_group.resource.location
 }
 
 module "resource_group" {
   source   = "../../"
-  location = var.location
+  location = module.regions.regions[random_integer.region_index.result].name
   name     = module.naming.resource_group.name_unique
   tags = {
     "hidden-title" = "This is visible in the resource name"
@@ -69,19 +75,22 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.5.2)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.71.0)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.71)
 
 ## Providers
 
 The following providers are used by this module:
 
-- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (>= 3.71.0)
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 3.71)
+
+- <a name="provider_random"></a> [random](#provider\_random)
 
 ## Resources
 
 The following resources are used by this module:
 
 - [azurerm_user_assigned_identity.dep_uai](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/user_assigned_identity) (resource)
+- [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
@@ -90,15 +99,7 @@ No required inputs.
 
 ## Optional Inputs
 
-The following input variables are optional (have default values):
-
-### <a name="input_location"></a> [location](#input\_location)
-
-Description: Required. The Azure region for deployment of the this resource.
-
-Type: `string`
-
-Default: `"eastus"`
+No optional inputs.
 
 ## Outputs
 
@@ -124,7 +125,13 @@ The following Modules are called:
 
 Source: Azure/naming/azurerm
 
-Version: 0.4.0
+Version:  >= 0.4.0
+
+### <a name="module_regions"></a> [regions](#module\_regions)
+
+Source: Azure/regions/azurerm
+
+Version: >= 0.3.0
 
 ### <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group)
 

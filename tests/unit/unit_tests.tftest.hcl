@@ -8,8 +8,6 @@ variables {
 provider "azurerm" {
   features {}
   skip_provider_registration = true
-  use_cli                    = true
-  environment                = startswith(var.location, "usgov") ? "usgovernment" : "public"
 }
 
 run "test_resource_group_name_validation_succeeds" {

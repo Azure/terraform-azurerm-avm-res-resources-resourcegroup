@@ -6,7 +6,8 @@ resource "azurerm_resource_group" "this" {
 
 # required AVM resources interfaces
 resource "azurerm_management_lock" "this" {
-  count      = var.lock.kind != "None" ? 1 : 0
+  count = var.lock.kind != "None" ? 1 : 0
+
   lock_level = var.lock.kind
   name       = coalesce(var.lock.name, "lock-${azurerm_resource_group.this.name}")
   scope      = azurerm_resource_group.this.id
