@@ -1,7 +1,7 @@
 <!-- BEGIN_TF_DOCS -->
-# terraform-azurerm-ecm-res-resource-resourcegroup
+# Complete Resource Group Deployment
 
-This module is used to deploy an Azure Resource Group
+This module is used to deploy an Azure Resource Group with all available functionality
 
 ```hcl
 terraform {
@@ -44,11 +44,51 @@ resource "random_integer" "region_index" {
   min = 0
 }
 
+resource "azurerm_user_assigned_identity" "dep_uai" {
+  location            = module.resource_group.resource.location
+  name                = module.naming.user_assigned_identity.name_unique
+  resource_group_name = module.resource_group.resource.name
+}
+
 module "resource_group" {
   source   = "../../"
   location = module.regions.regions[random_integer.region_index.result].name
   name     = module.naming.resource_group.name_unique
+  tags = {
+    "hidden-title" = "This is visible in the resource name"
+    Environment    = "Non-Prod"
+    Role           = "DeploymentValidation"
+  }
+  lock = {
+    kind = "CanNotDelete"
+    name = "myCustomLockName"
+
+  }
+  role_assignments = {
+    "roleassignment1" = {
+      principal_id               = azurerm_user_assigned_identity.dep_uai.principal_id
+      role_definition_id_or_name = "Reader"
+    },
+    "role_assignment2" = {
+      role_definition_id_or_name       = "/providers/Microsoft.Authorization/roleDefinitions/2a2b9908-6ea1-4ae2-8e65-a410df84e7d1" # Storage Blob Data Reader Role Guid 
+      principal_id                     = azurerm_user_assigned_identity.dep_uai.principal_id
+      skip_service_principal_aad_check = false
+      condition_version                = "2.0"
+      condition                        = <<-EOT
+(
+ (
+  !(ActionMatches{'Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read'} AND NOT SubOperationMatches{'Blob.List'})
+ )
+ OR 
+ (
+  @Resource[Microsoft.Storage/storageAccounts/blobServices/containers:name] StringEquals 'blobs-example-container'
+ )
+)
+EOT
+    }
+  }
 }
+
 ```
 
 <!-- markdownlint-disable MD033 -->
@@ -66,12 +106,15 @@ The following requirements are needed by this module:
 
 The following providers are used by this module:
 
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 3.71)
+
 - <a name="provider_random"></a> [random](#provider\_random) (>= 3.5.0, < 4.0.0)
 
 ## Resources
 
 The following resources are used by this module:
 
+- [azurerm_user_assigned_identity.dep_uai](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/user_assigned_identity) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
 
 <!-- markdownlint-disable MD013 -->
