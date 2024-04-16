@@ -5,9 +5,9 @@ variables {
   }
 }
 
-provider "azurerm" {
-  features {}
-  skip_provider_registration = true
+mock_provider "azurerm" {
+  // features {}
+  // skip_provider_registration = true
 }
 
 run "test_resource_group_name_validation_succeeds" {
@@ -24,20 +24,23 @@ run "test_resource_group_name_validation_succeeds" {
 run "test_lock_name_not_provided_value" {
   command = plan
   assert {
-    condition     = azurerm_management_lock.this[0].name == "lock-rg-test"
-    error_message = "Lock name didn't match expected value"
+    condition     = azurerm_management_lock.this[0].name == "lock-CanNotDelete"
+    error_message = "Lock name didn't match expected default value"
   }
 }
 
 run "test_lock_name_provided_value" {
   command = plan
-  lock = {
-    kind = "CanNotDelete"
-    name = "myCustomLockName"
+  variables {
+    lock = {
+      kind = "CanNotDelete"
+      name = "myCustomLockName"
+    }
   }
+
   assert {
     condition     = azurerm_management_lock.this[0].name == var.lock.name
-    error_message = "Lock name didn't match expected value"
+    error_message = "Lock name didn't match expected modified value"
   }
 }
 
@@ -46,7 +49,7 @@ run "test_lock_kind_matches_allowed_values" {
   command = plan
   assert {
     condition     = contains(["CanNotDelete", "ReadOnly", "None"], var.lock.kind)
-    error_message = "Lock name didn't match expected value"
+    error_message = "Lock kind didn't match expected value"
   }
 }
 
