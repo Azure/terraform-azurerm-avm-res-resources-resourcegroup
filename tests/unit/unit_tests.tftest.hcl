@@ -10,7 +10,14 @@ mock_provider "azurerm" {
   // skip_provider_registration = true
 }
 
-run "test_resource_group_name_validation_succeeds" {
+run "test_valid_resource_group_name" {
+  command = plan
+  variables {
+    name = "rg-niceresourcegroup-name"
+  }
+}
+
+run "test_invalid_resource_group_name_end_with_period" {
   command = plan
   variables {
     name = "badresourcegroupname."
@@ -20,6 +27,37 @@ run "test_resource_group_name_validation_succeeds" {
     var.name
   ]
 }
+
+run "test_invalid_resource_group_name_greater_then_90_characters" {
+  command = plan
+  variables {
+    name = "rgasdflkjsakj93jkdie9042ikojdioe03iorergasdflkjsakj93jkdie9042ikojdioe03iorergasdflkjsakj93jkdie9042ikojdioe03iore"
+  }
+  expect_failures = [
+    var.name
+  ]
+}
+
+run "test_invalid_resource_group_name_empty" {
+  command = plan
+  variables {
+    name = ""
+  }
+  expect_failures = [
+    var.name
+  ]
+}
+
+run "test_invalid_resource_group_name_null" {
+  command = plan
+  variables {
+    name = null
+  }
+  expect_failures = [
+    var.name
+  ]
+}
+
 
 run "test_lock_name_not_provided_value" {
   command = plan
