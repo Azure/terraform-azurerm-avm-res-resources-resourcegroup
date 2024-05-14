@@ -1,5 +1,6 @@
 variable "location" {
   type        = string
+  nullable    = false
   description = "Required. The Azure region for deployment of the this resource."
 }
 
@@ -57,6 +58,7 @@ variable "role_assignments" {
     condition                              = optional(string, null)
     condition_version                      = optional(string, null)
     delegated_managed_identity_resource_id = optional(string, null)
+    principal_type                         = optional(string, null)
   }))
   default     = {}
   nullable    = false
