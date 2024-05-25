@@ -1,3 +1,3 @@
-# Default example
+# terraform-azurerm-ecm-res-resource-resourcegroup
 
-This deploys the module in its simplest form.
+This module is used to deploy an Azure Resource Group

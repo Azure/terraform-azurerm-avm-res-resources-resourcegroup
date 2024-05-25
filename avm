@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 usage () {
-  echo "Usage: avm <make target>"
+  echo "Usage: make <make target>"
 }
 
 CONTAINER_RUNTIME=${CONTAINER_RUNTIME:-docker}
@@ -12,7 +12,7 @@ if [ ! "$(command -v "$CONTAINER_RUNTIME")" ]; then
 fi
 
 if [ -z "$1" ]; then
-    echo "Error: Please provide a make target. See https://github.com/Azure/tfmod-scaffold/blob/main/avmmakefile for available targets."
+    echo "Error: Please provide a make target. See https://github.com/kevball2/tfmod-scaffold/blob/main/avmmakefile for available targets."
     echo
     usage
     exit 1
