@@ -1,7 +1,7 @@
 variable "location" {
   type        = string
-  nullable    = false
   description = "Required. The Azure region for deployment of the this resource."
+  nullable    = false
 }
 
 variable "name" {
@@ -61,7 +61,6 @@ variable "role_assignments" {
     principal_type                         = optional(string, null)
   }))
   default     = {}
-  nullable    = false
   description = <<DESCRIPTION
 Optional. A map of role assignments to create on this resource. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
 
@@ -116,6 +115,7 @@ EOT
 }
 ```
 DESCRIPTION
+  nullable    = false
 
   validation {
     condition = alltrue(
