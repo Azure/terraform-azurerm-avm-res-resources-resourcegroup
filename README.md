@@ -35,6 +35,7 @@ The following resources are used by this module:
 - [azurerm_client_config.telemetry](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) (data source)
 - [modtm_module_source.telemetry](https://registry.terraform.io/providers/hashicorp/modtm/latest/docs/data-sources/module_source) (data source)
 
+
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
 
