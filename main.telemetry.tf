@@ -14,7 +14,6 @@ resource "random_uuid" "telemetry" {
 resource "modtm_telemetry" "telemetry" {
   count = var.enable_telemetry ? 1 : 0
 
-
   tags = {
     subscription_id = one(data.azurerm_client_config.telemetry).subscription_id
     tenant_id       = one(data.azurerm_client_config.telemetry).tenant_id
