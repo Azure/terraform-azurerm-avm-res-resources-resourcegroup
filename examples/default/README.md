@@ -5,11 +5,11 @@ This module is used to deploy an Azure Resource Group
 
 ```hcl
 terraform {
-  required_version = ">= 1.5.2"
+  required_version = ">= 1.6"
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.71"
+      version = ">= 3.71"
     }
     random = {
       source  = "hashicorp/random"
@@ -19,7 +19,7 @@ terraform {
 }
 
 provider "azurerm" {
-  skip_provider_registration = true
+  # skip_provider_registration = true
   features {
     resource_group {
       prevent_deletion_if_contains_resources = false
@@ -56,9 +56,9 @@ module "resource_group" {
 
 The following requirements are needed by this module:
 
-- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.5.2)
+- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.6)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.71)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.71)
 
 - <a name="requirement_random"></a> [random](#requirement\_random) (>= 3.5.0, < 4.0.0)
 
