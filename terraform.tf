@@ -4,7 +4,7 @@ terraform {
     # TODO: Ensure all required providers are listed here.
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.71"
+      version = ">= 3.71, < 5.0.0"
     }
     modtm = {
       source  = "azure/modtm"
