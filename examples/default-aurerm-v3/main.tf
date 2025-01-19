@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.5.2"
+  required_version = ">= 1.6"
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -13,7 +13,7 @@ terraform {
 }
 
 provider "azurerm" {
-  skip_provider_registration = true
+  # skip_provider_registration = true
   features {
     resource_group {
       prevent_deletion_if_contains_resources = false
