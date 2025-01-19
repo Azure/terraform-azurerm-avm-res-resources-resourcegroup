@@ -1,5 +1,5 @@
 <!-- BEGIN_TF_DOCS -->
-# terraform-azurerm-ecm-res-resource-resourcegroup
+# terraform-azurerm-ecm-res-resource-resourcegroup for azurerm v4
 
 This module is used to deploy an Azure Resource Group
 
@@ -9,7 +9,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.71"
+      version = "~> 4.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -49,6 +49,23 @@ module "resource_group" {
   location = module.regions.regions[random_integer.region_index.result].name
   name     = module.naming.resource_group.name_unique
 }
+
+output "name" {
+  description = "The name of the resource group"
+  value       = module.resource_group.name
+}
+
+# Module owners should include the full resource via a 'resource' output
+# https://confluence.ei.leidos.com/display/ECM/Terraform+ECM+Style+Guide#TerraformECMStyleGuide-TFFR2-Category:Outputs-AdditionalTerraformOutputs
+output "resource" {
+  description = "This is the full output for the resource group."
+  value       = module.resource_group
+}
+
+output "resource_id" {
+  description = "The resource Id of the resource group"
+  value       = module.resource_group.resource_id
+}
 ```
 
 <!-- markdownlint-disable MD033 -->
@@ -58,7 +75,7 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.5.2)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.71)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 4.0)
 
 - <a name="requirement_random"></a> [random](#requirement\_random) (>= 3.5.0, < 4.0.0)
 

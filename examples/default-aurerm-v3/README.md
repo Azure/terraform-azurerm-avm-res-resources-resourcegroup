@@ -1,15 +1,15 @@
 <!-- BEGIN_TF_DOCS -->
-# Complete Resource Group Deployment
+# terraform-azurerm-ecm-res-resource-resourcegroup for azurerm v3
 
-This module is used to deploy an Azure Resource Group with all available functionality
+This module is used to deploy an Azure Resource Group
 
 ```hcl
 terraform {
-  required_version = ">= 1.5.2"
+  required_version = ">= 1.6"
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 4.0"
+      version = "~> 3.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -44,56 +44,28 @@ resource "random_integer" "region_index" {
   min = 0
 }
 
-resource "azurerm_resource_group" "dep" {
-  location = module.regions.regions[random_integer.region_index.result].name
-  name     = "${module.naming.resource_group.name_unique}-dep"
-}
-
-resource "azurerm_user_assigned_identity" "dep_uai" {
-  location            = azurerm_resource_group.dep.location
-  name                = module.naming.user_assigned_identity.name_unique
-  resource_group_name = azurerm_resource_group.dep.name
-}
-
 module "resource_group" {
   source   = "../../"
   location = module.regions.regions[random_integer.region_index.result].name
   name     = module.naming.resource_group.name_unique
-  tags = {
-    "hidden-title" = "This is visible in the resource name"
-    Environment    = "Non-Prod"
-    Role           = "DeploymentValidation"
-  }
-  lock = {
-    kind = "CanNotDelete"
-    name = "myCustomLockName"
-
-  }
-  role_assignments = {
-    "roleassignment1" = {
-      principal_id               = azurerm_user_assigned_identity.dep_uai.principal_id
-      role_definition_id_or_name = "Reader"
-    },
-    "role_assignment2" = {
-      role_definition_id_or_name       = "/providers/Microsoft.Authorization/roleDefinitions/2a2b9908-6ea1-4ae2-8e65-a410df84e7d1" # Storage Blob Data Reader Role Guid 
-      principal_id                     = azurerm_user_assigned_identity.dep_uai.principal_id
-      skip_service_principal_aad_check = false
-      condition_version                = "2.0"
-      condition                        = <<-EOT
-(
- (
-  !(ActionMatches{'Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read'} AND NOT SubOperationMatches{'Blob.List'})
- )
- OR 
- (
-  @Resource[Microsoft.Storage/storageAccounts/blobServices/containers:name] StringEquals 'blobs-example-container'
- )
-)
-EOT
-    }
-  }
 }
 
+output "name" {
+  description = "The name of the resource group"
+  value       = module.resource_group.name
+}
+
+# Module owners should include the full resource via a 'resource' output
+# https://confluence.ei.leidos.com/display/ECM/Terraform+ECM+Style+Guide#TerraformECMStyleGuide-TFFR2-Category:Outputs-AdditionalTerraformOutputs
+output "resource" {
+  description = "This is the full output for the resource group."
+  value       = module.resource_group
+}
+
+output "resource_id" {
+  description = "The resource Id of the resource group"
+  value       = module.resource_group.resource_id
+}
 ```
 
 <!-- markdownlint-disable MD033 -->
@@ -101,9 +73,9 @@ EOT
 
 The following requirements are needed by this module:
 
-- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.5.2)
+- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.6)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 4.0)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.0)
 
 - <a name="requirement_random"></a> [random](#requirement\_random) (>= 3.5.0, < 4.0.0)
 
@@ -111,8 +83,6 @@ The following requirements are needed by this module:
 
 The following resources are used by this module:
 
-- [azurerm_resource_group.dep](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
-- [azurerm_user_assigned_identity.dep_uai](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/user_assigned_identity) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
 
 <!-- markdownlint-disable MD013 -->
