@@ -129,7 +129,7 @@ DESCRIPTION
         role_definition_id_or_name must have the following format: 
          - Using the role definition Id : `/providers/Microsoft.Authorization/roleDefinitions/<role_guid>`
          - Using the role name: Reader | "Storage Blob Data Reader"
-      ERROR_MESSAGE 
+      ERROR_MESSAGE
   }
 }
 
