@@ -6,6 +6,7 @@ This module is used to deploy an Azure Resource Group with all available functio
 ```hcl
 terraform {
   required_version = ">= 1.9, < 2.0"
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -56,14 +57,10 @@ resource "azurerm_user_assigned_identity" "dep_uai" {
 }
 
 module "resource_group" {
-  source   = "../../"
+  source = "../../"
+
   location = module.regions.regions[random_integer.region_index.result].name
   name     = module.naming.resource_group.name_unique
-  tags = {
-    "hidden-title" = "This is visible in the resource name"
-    Environment    = "Non-Prod"
-    Role           = "DeploymentValidation"
-  }
   lock = {
     kind = "CanNotDelete"
     name = "myCustomLockName"
@@ -91,6 +88,11 @@ module "resource_group" {
 )
 EOT
     }
+  }
+  tags = {
+    "hidden-title" = "This is visible in the resource name"
+    Environment    = "Non-Prod"
+    Role           = "DeploymentValidation"
   }
 }
 
