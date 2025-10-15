@@ -25,12 +25,12 @@ provider "azurerm" {
 # Importing the Azure naming module to ensure resources have unique CAF compliant names.
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = " >= 0.4.0"
+  version = "0.4.2"
 }
 
 module "regions" {
   source  = "Azure/regions/azurerm"
-  version = ">= 0.3.0"
+  version = "0.8.2"
 }
 
 # This allows us to randomize the region for the resource group.
@@ -66,7 +66,7 @@ module "resource_group" {
       role_definition_id_or_name = "Reader"
     },
     "role_assignment2" = {
-      role_definition_id_or_name       = "/providers/Microsoft.Authorization/roleDefinitions/2a2b9908-6ea1-4ae2-8e65-a410df84e7d1" # Storage Blob Data Reader Role Guid 
+      role_definition_id_or_name       = "/providers/Microsoft.Authorization/roleDefinitions/2a2b9908-6ea1-4ae2-8e65-a410df84e7d1" # Storage Blob Data Reader Role Guid
       principal_id                     = azurerm_user_assigned_identity.dep_uai.principal_id
       skip_service_principal_aad_check = false
       condition_version                = "2.0"
@@ -75,7 +75,7 @@ module "resource_group" {
  (
   !(ActionMatches{'Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read'} AND NOT SubOperationMatches{'Blob.List'})
  )
- OR 
+ OR
  (
   @Resource[Microsoft.Storage/storageAccounts/blobServices/containers:name] StringEquals 'blobs-example-container'
  )
