@@ -164,6 +164,10 @@ Default: `null`
 
 The following outputs are exported:
 
+### <a name="output_location"></a> [location](#output\_location)
+
+Description: The location of the resource group
+
 ### <a name="output_name"></a> [name](#output\_name)
 
 Description: The name of the resource group
