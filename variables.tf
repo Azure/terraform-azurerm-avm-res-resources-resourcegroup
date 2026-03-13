@@ -49,6 +49,12 @@ variable "lock" {
   }
 }
 
+variable "managed_by" {
+  type        = string
+  default     = null
+  description = "(Optional) The ID of the resource or application that manages this Resource Group."
+}
+
 # tflint-ignore: terraform_heredoc_usage
 variable "role_assignments" {
   type = map(object({
@@ -139,10 +145,4 @@ variable "tags" {
   type        = map(string)
   default     = null
   description = "(Optional) Tags of the resource."
-}
-
-variable "managed_by" {
-  type        = string
-  default     = null
-  description = "(Optional) The ID of the resource or application that manages this Resource Group."
 }
