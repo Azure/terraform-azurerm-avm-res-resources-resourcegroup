@@ -88,5 +88,7 @@ EOT
     Environment    = "Non-Prod"
     Role           = "DeploymentValidation"
   }
+
+  managed_by = "Terraform"
 }
 
