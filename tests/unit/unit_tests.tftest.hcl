@@ -1,5 +1,6 @@
 variables {
   name = "rg-test"
+  location = "eastus"
   lock = {
     kind = "CanNotDelete"
   }
