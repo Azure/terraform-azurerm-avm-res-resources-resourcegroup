@@ -60,6 +60,7 @@ module "resource_group" {
     name = "myCustomLockName"
 
   }
+  managed_by = "Terraform"
   role_assignments = {
     "roleassignment1" = {
       principal_id               = azurerm_user_assigned_identity.dep_uai.principal_id
