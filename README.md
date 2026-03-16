@@ -54,8 +54,8 @@ The following input variables are optional (have default values):
 
 ### <a name="input_enable_telemetry"></a> [enable\_telemetry](#input\_enable\_telemetry)
 
-Description: This variable controls whether or not telemetry is enabled for the module.
-For more information see <https://aka.ms/avm/telemetryinfo>.
+Description: This variable controls whether or not telemetry is enabled for the module.  
+For more information see <https://aka.ms/avm/telemetryinfo>.  
 If it is set to false, then no telemetry will be collected.
 
 Type: `bool`
@@ -80,6 +80,14 @@ object({
 
 Default: `null`
 
+### <a name="input_managed_by"></a> [managed\_by](#input\_managed\_by)
+
+Description: (Optional) The ID of the resource or application that manages this Resource Group.
+
+Type: `string`
+
+Default: `null`
+
 ### <a name="input_role_assignments"></a> [role\_assignments](#input\_role\_assignments)
 
 Description: Optional. A map of role assignments to create on this resource. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
@@ -90,7 +98,7 @@ Description: Optional. A map of role assignments to create on this resource. The
 - `skip_service_principal_aad_check` - (Optional) If set to true, skips the Azure Active Directory check for the service principal in the tenant. Defaults to false.
 - `condition` - (Optional) The condition which will be used to scope the role assignment.
 - `condition_version` - (Optional) The version of the condition syntax. Valid values are '2.0'.
-- `delegated_managed_identity_resource_id` - (Optional) The delegated Azure Resource Id which contains a Managed Identity. Changing this forces a new resource to be created. NOTE:
+- `delegated_managed_identity_resource_id` - (Optional) The delegated Azure Resource Id which contains a Managed Identity. Changing this forces a new resource to be created. NOTE:  
 this field is only used in cross tenant scenario.
 
 > Note: only set `skip_service_principal_aad_check` to true if you are assigning a role to a service principal.
@@ -157,14 +165,6 @@ Default: `{}`
 Description: (Optional) Tags of the resource.
 
 Type: `map(string)`
-
-Default: `null`
-
-### <a name="input_managed_by"></a> [managed_by](#input\_managed_by)
-
-Description: (Optional) The ID of the resource or application that manages this Resource Group.
-
-Type: `string`
 
 Default: `null`
 
