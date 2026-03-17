@@ -143,6 +143,6 @@ DESCRIPTION
 # tflint-ignore: terraform_unused_declarations
 variable "tags" {
   type        = map(string)
-  default     = null
+  default     = {}
   description = "(Optional) Tags of the resource."
 }
