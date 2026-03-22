@@ -80,6 +80,14 @@ object({
 
 Default: `null`
 
+### <a name="input_managed_by"></a> [managed\_by](#input\_managed\_by)
+
+Description: (Optional) The ID of the resource or application that manages this Resource Group.
+
+Type: `string`
+
+Default: `null`
+
 ### <a name="input_role_assignments"></a> [role\_assignments](#input\_role\_assignments)
 
 Description: Optional. A map of role assignments to create on this resource. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
@@ -101,7 +109,7 @@ role_assignments = {
   "role_assignment1" = {
     role_definition_id_or_name = "Reader"
     principal_id = "4179302c-702e-4de7-a061-beacd0a1be09"
-    
+
   },
 "role_assignment2" = {
   role_definition_id_or_name = "2a2b9908-6ea1-4ae2-8e65-a410df84e7d1" // Storage Blob Data Reader Role Guid
@@ -130,7 +138,7 @@ AND
     ForAnyOfAnyValues:GuidEquals {dc887ae1-fe50-4307-be53-213ff08f3c0b}
   )
 )
-EOT  
+EOT
   }
 }
 ```
@@ -171,10 +179,6 @@ Description: The location of the resource group
 ### <a name="output_name"></a> [name](#output\_name)
 
 Description: The name of the resource group
-
-### <a name="output_resource"></a> [resource](#output\_resource)
-
-Description: This is the full output for the resource group.
 
 ### <a name="output_resource_id"></a> [resource\_id](#output\_resource\_id)
 
