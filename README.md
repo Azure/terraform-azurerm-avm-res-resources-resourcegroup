@@ -158,7 +158,7 @@ Description: (Optional) Tags of the resource.
 
 Type: `map(string)`
 
-Default: `null`
+Default: `{}`
 
 ## Outputs
 
