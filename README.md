@@ -172,10 +172,6 @@ Description: The location of the resource group
 
 Description: The name of the resource group
 
-### <a name="output_resource"></a> [resource](#output\_resource)
-
-Description: This is the full output for the resource group.
-
 ### <a name="output_resource_id"></a> [resource\_id](#output\_resource\_id)
 
 Description: The resource Id of the resource group
