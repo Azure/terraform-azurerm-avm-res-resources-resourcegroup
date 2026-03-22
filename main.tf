@@ -2,7 +2,7 @@ resource "azurerm_resource_group" "this" {
   location   = var.location
   name       = var.name
   managed_by = var.managed_by
-  tags       = var.tags != null ? var.tags : {}
+  tags       = var.tags
 }
 
 # required AVM resources interfaces
