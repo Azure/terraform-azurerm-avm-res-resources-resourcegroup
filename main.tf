@@ -13,6 +13,8 @@ resource "azurerm_management_lock" "this" {
   name       = coalesce(var.lock.name, "lock-${var.lock.kind}")
   scope      = azurerm_resource_group.this.id
   notes      = var.lock.kind == "CanNotDelete" ? "Cannot delete the resource or its child resources." : "Cannot delete or modify the resource or its child resources."
+
+  depends_on = [azurerm_role_assignment.this]
 }
 
 resource "azurerm_role_assignment" "this" {
