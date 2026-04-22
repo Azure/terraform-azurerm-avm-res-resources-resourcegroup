@@ -58,7 +58,6 @@ run "test_invalid_resource_group_name_null" {
   ]
 }
 
-
 run "test_lock_name_not_provided_value" {
   command = plan
   assert {
@@ -81,7 +80,6 @@ run "test_lock_name_provided_value" {
     error_message = "Lock name didn't match expected modified value"
   }
 }
-
 
 run "test_lock_kind_matches_allowed_values" {
   command = plan
@@ -143,4 +141,3 @@ run "test_role_assignment_role_definition_id_validation_succeeds" {
     var.role_assignments
   ]
 }
-
