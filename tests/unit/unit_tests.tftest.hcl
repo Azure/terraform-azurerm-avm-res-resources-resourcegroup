@@ -1,13 +1,28 @@
 variables {
-  name = "rg-test"
+  location = "eastus"
+  name     = "rg-test"
   lock = {
     kind = "CanNotDelete"
   }
 }
 
-mock_provider "azurerm" {
-  // features {}
-  // skip_provider_registration = true
+mock_provider "azapi" {
+  mock_data "azapi_resource_list" {
+    defaults = {
+      output = {
+        results = [
+          {
+            id        = "/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Authorization/roleDefinitions/acdd72a7-3385-48ef-bd42-f606fba81ae7"
+            role_name = "Reader"
+          },
+          {
+            id        = "/providers/Microsoft.Authorization/roleDefinitions/2a2b9908-6ea1-4ae2-8e65-a410df84e7d1"
+            role_name = "/providers/Microsoft.Authorization/roleDefinitions/2a2b9908-6ea1-4ae2-8e65-a410df84e7d1"
+          },
+        ]
+      }
+    }
+  }
 }
 
 run "test_valid_resource_group_name" {
@@ -58,11 +73,10 @@ run "test_invalid_resource_group_name_null" {
   ]
 }
 
-
 run "test_lock_name_not_provided_value" {
   command = plan
   assert {
-    condition     = azurerm_management_lock.this[0].name == "lock-CanNotDelete"
+    condition     = azapi_resource.lock[0].name == "lock-CanNotDelete"
     error_message = "Lock name didn't match expected default value"
   }
 }
@@ -77,11 +91,10 @@ run "test_lock_name_provided_value" {
   }
 
   assert {
-    condition     = azurerm_management_lock.this[0].name == var.lock.name
+    condition     = azapi_resource.lock[0].name == var.lock.name
     error_message = "Lock name didn't match expected modified value"
   }
 }
-
 
 run "test_lock_kind_matches_allowed_values" {
   command = plan
@@ -143,4 +156,3 @@ run "test_role_assignment_role_definition_id_validation_succeeds" {
     var.role_assignments
   ]
 }
-

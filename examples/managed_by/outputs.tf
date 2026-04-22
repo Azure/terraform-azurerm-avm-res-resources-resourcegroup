@@ -1,19 +1,14 @@
-output "location" {
-  description = "The location of the resource group"
-  value       = azapi_resource.this.location
-}
-
 output "name" {
   description = "The name of the resource group"
-  value       = azapi_resource.this.name
+  value       = module.resource_group.name
 }
 
 output "resource" {
   description = "This is the full output for the resource group."
-  value       = azapi_resource.this
+  value       = module.resource_group
 }
 
 output "resource_id" {
   description = "The resource Id of the resource group"
-  value       = azapi_resource.this.id
+  value       = module.resource_group.resource_id
 }

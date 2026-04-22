@@ -9,9 +9,9 @@ terraform {
   required_version = ">= 1.9, < 2.0"
 
   required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 4.0"
+    azapi = {
+      source  = "Azure/azapi"
+      version = "~> 2.4"
     }
     random = {
       source  = "hashicorp/random"
@@ -20,14 +20,16 @@ terraform {
   }
 }
 
+provider "azapi" {}
+
+/*
+# NOTE: The azurerm provider block is required only when upgrading from a previous version of the module that used the azurerm provider. It can be removed in new implementations of the module or after upgrading.
 provider "azurerm" {
-  # skip_provider_registration = true
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
-    }
-  }
+  features {}
 }
+*/
+
+data "azapi_client_config" "current" {}
 
 # Importing the Azure naming module to ensure resources have unique CAF compliant names.
 module "naming" {
@@ -36,8 +38,10 @@ module "naming" {
 }
 
 module "regions" {
-  source  = "Azure/regions/azurerm"
-  version = "0.8.2"
+  source  = "Azure/avm-utl-regions/azurerm"
+  version = "0.12.0"
+
+  is_recommended = true
 }
 
 # This allows us to randomize the region for the resource group.
@@ -46,15 +50,23 @@ resource "random_integer" "region_index" {
   min = 0
 }
 
-resource "azurerm_resource_group" "dep" {
-  location = module.regions.regions[random_integer.region_index.result].name
-  name     = "${module.naming.resource_group.name_unique}-dep"
+resource "azapi_resource" "dep" {
+  location  = module.regions.regions[random_integer.region_index.result].name
+  name      = "${module.naming.resource_group.name_unique}-dep"
+  parent_id = "/subscriptions/${data.azapi_client_config.current.subscription_id}"
+  type      = "Microsoft.Resources/resourceGroups@2025-04-01"
+  body = {
+    properties = {}
+  }
 }
 
-resource "azurerm_user_assigned_identity" "dep_uai" {
-  location            = azurerm_resource_group.dep.location
-  name                = module.naming.user_assigned_identity.name_unique
-  resource_group_name = azurerm_resource_group.dep.name
+resource "azapi_resource" "dep_uai" {
+  location               = azapi_resource.dep.location
+  name                   = module.naming.user_assigned_identity.name_unique
+  parent_id              = azapi_resource.dep.id
+  type                   = "Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31"
+  body                   = {}
+  response_export_values = ["properties.principalId"]
 }
 
 module "resource_group" {
@@ -65,17 +77,24 @@ module "resource_group" {
   lock = {
     kind = "CanNotDelete"
     name = "myCustomLockName"
-
+  }
+  role_assignment_name_overrides = {
+    "roleassignment1"  = "dfd0b1f9-3f46-32ba-e9e1-4b5591aa8337"
+    "role_assignment2" = "bd83f8d6-f0a2-1584-9e3c-f31c185847ea"
   }
   role_assignments = {
     "roleassignment1" = {
-      principal_id               = azurerm_user_assigned_identity.dep_uai.principal_id
+      principal_id               = azapi_resource.dep_uai.output.properties.principalId
       role_definition_id_or_name = "Reader"
+      principal_type             = "ServicePrincipal"
+      description                = "Reader role assignment for the user assigned identity"
     },
     "role_assignment2" = {
-      role_definition_id_or_name       = "/providers/Microsoft.Authorization/roleDefinitions/2a2b9908-6ea1-4ae2-8e65-a410df84e7d1" # Storage Blob Data Reader Role Guid
-      principal_id                     = azurerm_user_assigned_identity.dep_uai.principal_id
+      role_definition_id_or_name       = "Storage Blob Data Reader"
+      principal_id                     = azapi_resource.dep_uai.output.properties.principalId
       skip_service_principal_aad_check = false
+      principal_type                   = "ServicePrincipal"
+      description                      = "Storage Blob Data Reader role assignment with conditional access on blob list operations"
       condition_version                = "2.0"
       condition                        = <<-EOT
 (
@@ -88,6 +107,12 @@ module "resource_group" {
  )
 )
 EOT
+    },
+    "role_assignment3" = {
+      role_definition_id_or_name = "/subscriptions/${data.azapi_client_config.current.subscription_id}/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe" # Storage Blob Data Contributor
+      principal_id               = azapi_resource.dep_uai.output.properties.principalId
+      principal_type             = "ServicePrincipal"
+      description                = "Storage Blob Data Contributor role assignment using a role definition resource ID"
     }
   }
   tags = {
@@ -96,7 +121,6 @@ EOT
     Role           = "DeploymentValidation"
   }
 }
-
 ```
 
 <!-- markdownlint-disable MD033 -->
@@ -106,7 +130,7 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.9, < 2.0)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 4.0)
+- <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) (~> 2.4)
 
 - <a name="requirement_random"></a> [random](#requirement\_random) (>= 3.5.0, < 4.0.0)
 
@@ -114,9 +138,10 @@ The following requirements are needed by this module:
 
 The following resources are used by this module:
 
-- [azurerm_resource_group.dep](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
-- [azurerm_user_assigned_identity.dep_uai](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/user_assigned_identity) (resource)
+- [azapi_resource.dep](https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource) (resource)
+- [azapi_resource.dep_uai](https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
+- [azapi_client_config.current](https://registry.terraform.io/providers/Azure/azapi/latest/docs/data-sources/client_config) (data source)
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
@@ -155,9 +180,9 @@ Version: 0.4.2
 
 ### <a name="module_regions"></a> [regions](#module\_regions)
 
-Source: Azure/regions/azurerm
+Source: Azure/avm-utl-regions/azurerm
 
-Version: 0.8.2
+Version: 0.12.0
 
 ### <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group)
 

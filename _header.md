@@ -1,2 +1,3 @@
-# terraform-azurerm-res-resource-resourcegroup
-Module to deploy resource groups in Azure
+# Azure Verified Module for Resource Groups
+
+Module to deploy resource groups.

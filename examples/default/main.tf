@@ -2,9 +2,9 @@ terraform {
   required_version = ">= 1.9, < 2.0"
 
   required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 4.0"
+    azapi = {
+      source  = "Azure/azapi"
+      version = "~> 2.4"
     }
     random = {
       source  = "hashicorp/random"
@@ -13,14 +13,14 @@ terraform {
   }
 }
 
+provider "azapi" {}
+
+/*
+# NOTE: The azurerm provider block is required only when upgrading from a previous version of the module that used the azurerm provider. It can be removed in new implementations of the module or after upgrading.
 provider "azurerm" {
-  skip_provider_registration = true
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
-    }
-  }
+  features {}
 }
+*/
 
 # Importing the Azure naming module to ensure resources have unique CAF compliant names.
 module "naming" {
@@ -29,8 +29,10 @@ module "naming" {
 }
 
 module "regions" {
-  source  = "Azure/regions/azurerm"
-  version = "0.8.2"
+  source  = "Azure/avm-utl-regions/azurerm"
+  version = "0.12.0"
+
+  is_recommended = true
 }
 
 # This allows us to randomize the region for the resource group.
