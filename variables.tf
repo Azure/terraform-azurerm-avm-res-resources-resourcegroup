@@ -49,6 +49,22 @@ variable "lock" {
   }
 }
 
+variable "retry" {
+  type = object({
+    error_message_regex  = optional(list(string), ["409 Conflict"])
+    interval_seconds     = optional(number, null)
+    max_interval_seconds = optional(number, null)
+  })
+  default     = {}
+  description = <<DESCRIPTION
+The retry configuration applied to the underlying `azapi_resource` resources (resource group, lock, role assignments).
+
+- `error_message_regex` - (Optional) A list of regular expressions to match against error messages. If any of the regular expressions match, the request will be retried. Defaults to `["409"]` to retry on `409 Conflict` responses.
+- `interval_seconds` - (Optional) The base number of seconds to wait between retries. Defaults to the AzAPI provider default (`10`).
+- `max_interval_seconds` - (Optional) The maximum number of seconds to wait between retries. Defaults to the AzAPI provider default (`180`).
+DESCRIPTION
+}
+
 variable "role_assignments" {
   type = map(object({
     role_definition_id_or_name             = string
@@ -137,4 +153,25 @@ variable "tags" {
   type        = map(string)
   default     = null
   description = "(Optional) Tags of the resource."
+}
+
+variable "timeouts" {
+  type = object({
+    create = optional(string, null)
+    delete = optional(string, null)
+    read   = optional(string, null)
+    update = optional(string, null)
+  })
+  default     = {}
+  description = <<DESCRIPTION
+The timeouts applied to the underlying `azapi_resource` resources (resource group, lock, role assignments).
+
+Each value must be a string parsable as a Go duration (for example `"30s"`, `"5m"`, `"1h30m"`). When `null`, the AzAPI provider default is used.
+
+- `create` - (Optional) Timeout for create operations.
+- `delete` - (Optional) Timeout for delete operations.
+- `read` - (Optional) Timeout for read operations.
+- `update` - (Optional) Timeout for update operations.
+DESCRIPTION
+  nullable    = false
 }

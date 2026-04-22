@@ -9,9 +9,9 @@ terraform {
   required_version = ">= 1.9, < 2.0"
 
   required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 4.0"
+    azapi = {
+      source  = "Azure/azapi"
+      version = "~> 2.4"
     }
     random = {
       source  = "hashicorp/random"
@@ -20,14 +20,7 @@ terraform {
   }
 }
 
-provider "azurerm" {
-  skip_provider_registration = true
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
-    }
-  }
-}
+provider "azapi" {}
 
 # Importing the Azure naming module to ensure resources have unique CAF compliant names.
 module "naming" {
@@ -36,8 +29,10 @@ module "naming" {
 }
 
 module "regions" {
-  source  = "Azure/regions/azurerm"
-  version = "0.8.2"
+  source  = "Azure/avm-utl-regions/azurerm"
+  version = "0.12.0"
+
+  is_recommended = true
 }
 
 # This allows us to randomize the region for the resource group.
@@ -64,7 +59,7 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.9, < 2.0)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 4.0)
+- <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) (~> 2.4)
 
 - <a name="requirement_random"></a> [random](#requirement\_random) (>= 3.5.0, < 4.0.0)
 
@@ -111,9 +106,9 @@ Version: 0.4.2
 
 ### <a name="module_regions"></a> [regions](#module\_regions)
 
-Source: Azure/regions/azurerm
+Source: Azure/avm-utl-regions/azurerm
 
-Version: 0.8.2
+Version: 0.12.0
 
 ### <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group)
 
