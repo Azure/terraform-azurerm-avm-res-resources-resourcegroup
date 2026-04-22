@@ -99,6 +99,23 @@ object({
 
 Default: `{}`
 
+### <a name="input_role_assignment_name_overrides"></a> [role\_assignment\_name\_overrides](#input\_role\_assignment\_name\_overrides)
+
+Description: Optional. A map of role assignment names to override the auto-generated names produced by the interfaces module.
+
+The map key must match a key in the `role_assignments` variable. The map value must be a valid UUID (the role assignment resource name in Azure is a GUID).
+
+Example:
+```hcl
+role_assignment_name_overrides = {
+  "roleassignment1" = "00000000-0000-0000-0000-000000000001"
+}
+```
+
+Type: `map(string)`
+
+Default: `{}`
+
 ### <a name="input_role_assignments"></a> [role\_assignments](#input\_role\_assignments)
 
 Description: Optional. A map of role assignments to create on this resource. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.

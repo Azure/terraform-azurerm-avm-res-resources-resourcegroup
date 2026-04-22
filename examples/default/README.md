@@ -22,6 +22,13 @@ terraform {
 
 provider "azapi" {}
 
+/*
+# NOTE: The azurerm provider block is required only when upgrading from a previous version of the module that used the azurerm provider. It can be removed in new implementations of the module or after upgrading.
+provider "azurerm" {
+  features {}
+}
+*/
+
 # Importing the Azure naming module to ensure resources have unique CAF compliant names.
 module "naming" {
   source  = "Azure/naming/azurerm"

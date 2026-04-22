@@ -65,6 +65,33 @@ The retry configuration applied to the underlying `azapi_resource` resources (re
 DESCRIPTION
 }
 
+variable "role_assignment_name_overrides" {
+  type        = map(string)
+  default     = {}
+  description = <<DESCRIPTION
+Optional. A map of role assignment names to override the auto-generated names produced by the interfaces module.
+
+The map key must match a key in the `role_assignments` variable. The map value must be a valid UUID (the role assignment resource name in Azure is a GUID).
+
+Example:
+```hcl
+role_assignment_name_overrides = {
+  "roleassignment1" = "00000000-0000-0000-0000-000000000001"
+}
+```
+DESCRIPTION
+  nullable    = false
+
+  validation {
+    condition = alltrue(
+      [for name in values(var.role_assignment_name_overrides) :
+        can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", name))
+      ]
+    )
+    error_message = "Each value in `role_assignment_name_overrides` must be a valid GUID (e.g. `00000000-0000-0000-0000-000000000000`)."
+  }
+}
+
 variable "role_assignments" {
   type = map(object({
     role_definition_id_or_name             = string

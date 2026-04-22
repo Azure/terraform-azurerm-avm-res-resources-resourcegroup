@@ -15,6 +15,13 @@ terraform {
 
 provider "azapi" {}
 
+/*
+# NOTE: The azurerm provider block is required only when upgrading from a previous version of the module that used the azurerm provider. It can be removed in new implementations of the module or after upgrading.
+provider "azurerm" {
+  features {}
+}
+*/
+
 data "azapi_client_config" "current" {}
 
 # Importing the Azure naming module to ensure resources have unique CAF compliant names.
@@ -64,6 +71,10 @@ module "resource_group" {
     kind = "CanNotDelete"
     name = "myCustomLockName"
   }
+  role_assignment_name_overrides = {
+    "roleassignment1"  = "dfd0b1f9-3f46-32ba-e9e1-4b5591aa8337"
+    "role_assignment2" = "bd83f8d6-f0a2-1584-9e3c-f31c185847ea"
+  }
   role_assignments = {
     "roleassignment1" = {
       principal_id               = azapi_resource.dep_uai.output.properties.principalId
@@ -103,4 +114,3 @@ EOT
     Role           = "DeploymentValidation"
   }
 }
-
