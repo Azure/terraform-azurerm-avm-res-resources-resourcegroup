@@ -79,6 +79,14 @@ object({
 
 Default: `null`
 
+### <a name="input_managed_by"></a> [managed\_by](#input\_managed\_by)
+
+Description: (Optional) The ID of the resource or application that manages this resource group. Setting this property indicates that the resource group is managed by another service (for example a managed application or a Databricks workspace).
+
+Type: `string`
+
+Default: `null`
+
 ### <a name="input_retry"></a> [retry](#input\_retry)
 
 Description: The retry configuration applied to the underlying `azapi_resource` resources (resource group, lock, role assignments).

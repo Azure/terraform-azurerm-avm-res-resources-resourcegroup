@@ -49,6 +49,17 @@ variable "lock" {
   }
 }
 
+variable "managed_by" {
+  type        = string
+  default     = null
+  description = "(Optional) The ID of the resource or application that manages this resource group. Setting this property indicates that the resource group is managed by another service (for example a managed application or a Databricks workspace)."
+
+  validation {
+    condition     = var.managed_by == null || can(regex("^/.+/.+", var.managed_by))
+    error_message = "`managed_by` must be a valid Azure resource ID starting with `/` and containing at least two `/` separated segments."
+  }
+}
+
 variable "retry" {
   type = object({
     error_message_regex  = optional(list(string), ["409 Conflict"])

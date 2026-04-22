@@ -16,6 +16,7 @@ resource "azapi_resource" "this" {
   type      = "Microsoft.Resources/resourceGroups@2025-04-01"
   body = {
     properties = {}
+    managedBy  = var.managed_by
   }
   create_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   delete_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
