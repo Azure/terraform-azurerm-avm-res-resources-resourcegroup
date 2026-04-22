@@ -1,6 +1,6 @@
 module "interfaces" {
   source  = "Azure/avm-utl-interfaces/azure"
-  version = "0.5.1"
+  version = "0.5.2"
 
   enable_telemetry                     = var.enable_telemetry
   lock                                 = var.lock

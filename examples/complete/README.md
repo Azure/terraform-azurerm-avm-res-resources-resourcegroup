@@ -96,6 +96,12 @@ module "resource_group" {
  )
 )
 EOT
+    },
+    "role_assignment3" = {
+      role_definition_id_or_name = "/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe" # Storage Blob Data Contributor
+      principal_id               = azapi_resource.dep_uai.output.properties.principalId
+      principal_type             = "ServicePrincipal"
+      description                = "Storage Blob Data Contributor role assignment using a role definition resource ID"
     }
   }
   tags = {
