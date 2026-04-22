@@ -136,7 +136,7 @@ DESCRIPTION
   validation {
     condition = alltrue(
       [for role in var.role_assignments :
-        can(regex("^/providers/Microsoft\\.Authorization/roleDefinitions/[0-9a-fA-F-]+$", role.role_definition_id_or_name))
+        can(regex("^(/subscriptions/[0-9a-fA-F-]+)?/providers/Microsoft\\.Authorization/roleDefinitions/[0-9a-fA-F-]+$", role.role_definition_id_or_name))
         ||
         can(regex("^[[:alpha:]]+?", role.role_definition_id_or_name))
       ]
@@ -144,6 +144,7 @@ DESCRIPTION
     error_message = <<ERROR_MESSAGE
         role_definition_id_or_name must have the following format:
          - Using the role definition Id : `/providers/Microsoft.Authorization/roleDefinitions/<role_guid>`
+         - Using the subscription-scoped role definition Id : `/subscriptions/<subscription_id>/providers/Microsoft.Authorization/roleDefinitions/<role_guid>`
          - Using the role name: Reader | "Storage Blob Data Reader"
       ERROR_MESSAGE
   }
