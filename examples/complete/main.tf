@@ -73,7 +73,7 @@ module "resource_group" {
       description                = "Reader role assignment for the user assigned identity"
     },
     "role_assignment2" = {
-      role_definition_id_or_name       = "/providers/Microsoft.Authorization/roleDefinitions/2a2b9908-6ea1-4ae2-8e65-a410df84e7d1" # Storage Blob Data Reader Role Guid
+      role_definition_id_or_name       = "Storage Blob Data Reader"
       principal_id                     = azapi_resource.dep_uai.output.properties.principalId
       skip_service_principal_aad_check = false
       principal_type                   = "ServicePrincipal"
