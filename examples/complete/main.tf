@@ -64,11 +64,15 @@ module "resource_group" {
     "roleassignment1" = {
       principal_id               = azurerm_user_assigned_identity.dep_uai.principal_id
       role_definition_id_or_name = "Reader"
+      principal_type             = "ServicePrincipal"
+      description                = "Reader role assignment for the user assigned identity"
     },
     "role_assignment2" = {
       role_definition_id_or_name       = "/providers/Microsoft.Authorization/roleDefinitions/2a2b9908-6ea1-4ae2-8e65-a410df84e7d1" # Storage Blob Data Reader Role Guid
       principal_id                     = azurerm_user_assigned_identity.dep_uai.principal_id
       skip_service_principal_aad_check = false
+      principal_type                   = "ServicePrincipal"
+      description                      = "Storage Blob Data Reader role assignment with conditional access on blob list operations"
       condition_version                = "2.0"
       condition                        = <<-EOT
 (

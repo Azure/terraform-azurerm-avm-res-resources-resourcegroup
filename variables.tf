@@ -12,7 +12,7 @@ variable "name" {
     condition     = can(regex("^[a-zA-Z0-9_().-]{1,89}[a-zA-Z0-9_()-]$", var.name))
     error_message = <<ERROR_MESSAGE
     The resource group name must meet the following requirements:
-    - `Between 1 and 90 characters long.` 
+    - `Between 1 and 90 characters long.`
     - `Can only contain Alphanumerics, underscores, parentheses, hyphens, periods.`
     - `Cannot end in a period`
     ERROR_MESSAGE
@@ -38,7 +38,7 @@ variable "lock" {
   default     = null
   description = <<DESCRIPTION
   Controls the Resource Lock configuration for this resource. The following properties can be specified:
-  
+
   - `kind` - (Required) The type of lock. Possible values are `\"CanNotDelete\"` and `\"ReadOnly\"`.
   - `name` - (Optional) The name of the lock. If not specified, a name will be generated based on the `kind` value. Changing this forces the creation of a new resource.
   DESCRIPTION
@@ -49,7 +49,6 @@ variable "lock" {
   }
 }
 
-# tflint-ignore: terraform_heredoc_usage
 variable "role_assignments" {
   type = map(object({
     role_definition_id_or_name             = string
@@ -82,10 +81,10 @@ role_assignments = {
   "role_assignment1" = {
     role_definition_id_or_name = "Reader"
     principal_id = "4179302c-702e-4de7-a061-beacd0a1be09"
-    
+
   },
 "role_assignment2" = {
-  role_definition_id_or_name = "2a2b9908-6ea1-4ae2-8e65-a410df84e7d1" // Storage Blob Data Reader Role Guid 
+  role_definition_id_or_name = "2a2b9908-6ea1-4ae2-8e65-a410df84e7d1" // Storage Blob Data Reader Role Guid
   principal_id = "4179302c-702e-4de7-a061-beacd0a1be09"
   skip_service_principal_aad_check = false
   condition_version = "2.0"
@@ -94,7 +93,7 @@ role_assignments = {
   (
     !(ActionMatches{'Microsoft.Authorization/roleAssignments/write'})
   )
-OR 
+OR
   (
   @Request[Microsoft.Authorization/roleAssignments:RoleDefinitionId]
   ForAnyOfAnyValues:GuidEquals {4179302c-702e-4de7-a061-beacd0a1be09}
@@ -105,13 +104,13 @@ AND
   (
     !(ActionMatches{'Microsoft.Authorization/roleAssignments/delete'})
   )
-  OR 
+  OR
   (
     @Resource[Microsoft.Authorization/roleAssignments:RoleDefinitionId]
     ForAnyOfAnyValues:GuidEquals {dc887ae1-fe50-4307-be53-213ff08f3c0b}
   )
 )
-EOT  
+EOT
   }
 }
 ```
@@ -127,14 +126,13 @@ DESCRIPTION
       ]
     )
     error_message = <<ERROR_MESSAGE
-        role_definition_id_or_name must have the following format: 
+        role_definition_id_or_name must have the following format:
          - Using the role definition Id : `/providers/Microsoft.Authorization/roleDefinitions/<role_guid>`
          - Using the role name: Reader | "Storage Blob Data Reader"
       ERROR_MESSAGE
   }
 }
 
-# tflint-ignore: terraform_unused_declarations
 variable "tags" {
   type        = map(string)
   default     = null

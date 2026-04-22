@@ -102,7 +102,7 @@ role_assignments = {
   "role_assignment1" = {
     role_definition_id_or_name = "Reader"
     principal_id = "4179302c-702e-4de7-a061-beacd0a1be09"
-    
+
   },
 "role_assignment2" = {
   role_definition_id_or_name = "2a2b9908-6ea1-4ae2-8e65-a410df84e7d1" // Storage Blob Data Reader Role Guid
@@ -131,7 +131,7 @@ AND
     ForAnyOfAnyValues:GuidEquals {dc887ae1-fe50-4307-be53-213ff08f3c0b}
   )
 )
-EOT  
+EOT
   }
 }
 ```
