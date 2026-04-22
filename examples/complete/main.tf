@@ -63,7 +63,6 @@ module "resource_group" {
   lock = {
     kind = "CanNotDelete"
     name = "myCustomLockName"
-
   }
   role_assignments = {
     "roleassignment1" = {
