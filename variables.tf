@@ -76,35 +76,9 @@ The retry configuration applied to the underlying `azapi_resource` resources (re
 DESCRIPTION
 }
 
-variable "role_assignment_name_overrides" {
-  type        = map(string)
-  default     = {}
-  description = <<DESCRIPTION
-Optional. A map of role assignment names to override the auto-generated names produced by the interfaces module.
-
-The map key must match a key in the `role_assignments` variable. The map value must be a valid UUID (the role assignment resource name in Azure is a GUID).
-
-Example:
-```hcl
-role_assignment_name_overrides = {
-  "roleassignment1" = "00000000-0000-0000-0000-000000000001"
-}
-```
-DESCRIPTION
-  nullable    = false
-
-  validation {
-    condition = alltrue(
-      [for name in values(var.role_assignment_name_overrides) :
-        can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", name))
-      ]
-    )
-    error_message = "Each value in `role_assignment_name_overrides` must be a valid GUID (e.g. `00000000-0000-0000-0000-000000000000`)."
-  }
-}
-
 variable "role_assignments" {
   type = map(object({
+    name                                   = optional(string, null)
     role_definition_id_or_name             = string
     principal_id                           = string
     description                            = optional(string, null)
@@ -118,6 +92,7 @@ variable "role_assignments" {
   description = <<DESCRIPTION
 Optional. A map of role assignments to create on this resource. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
 
+- `name` - (Optional) The name of the role assignment. If not set, a random UUID will be generated. Must be a valid GUID. Changing this forces the creation of a new resource.
 - `role_definition_id_or_name` - (Required) The ID or name of the role definition to assign to the principal.
 - `principal_id` - (Required) The ID of the principal to assign the role to.
 - `description` - (Optional) The description of the role assignment.
@@ -185,6 +160,14 @@ DESCRIPTION
          - Using the subscription-scoped role definition Id : `/subscriptions/<subscription_id>/providers/Microsoft.Authorization/roleDefinitions/<role_guid>`
          - Using the role name: Reader | "Storage Blob Data Reader"
       ERROR_MESSAGE
+  }
+  validation {
+    condition = alltrue(
+      [for role in var.role_assignments :
+        role.name == null || can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", coalesce(role.name, "00000000-0000-0000-0000-000000000000")))
+      ]
+    )
+    error_message = "Each `role_assignments[*].name` must be null or a valid GUID (e.g. `00000000-0000-0000-0000-000000000000`)."
   }
 }
 

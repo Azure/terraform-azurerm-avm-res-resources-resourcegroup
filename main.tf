@@ -1,12 +1,11 @@
 module "interfaces" {
   source  = "Azure/avm-utl-interfaces/azure"
-  version = "0.5.2"
+  version = "0.6.0"
 
-  enable_telemetry                     = var.enable_telemetry
-  lock                                 = var.lock
-  role_assignment_definition_scope     = "/subscriptions/${data.azapi_client_config.current.subscription_id}"
-  role_assignment_name_use_random_uuid = true
-  role_assignments                     = var.role_assignments
+  enable_telemetry                 = var.enable_telemetry
+  lock                             = var.lock
+  role_assignment_definition_scope = "/subscriptions/${data.azapi_client_config.current.subscription_id}"
+  role_assignments                 = var.role_assignments
 }
 
 resource "azapi_resource" "this" {
@@ -63,7 +62,7 @@ resource "azapi_resource" "lock" {
 resource "azapi_resource" "role_assignments" {
   for_each = module.interfaces.role_assignments_azapi
 
-  name                   = lookup(var.role_assignment_name_overrides, each.key, each.value.name)
+  name                   = each.value.name
   parent_id              = azapi_resource.this.id
   type                   = each.value.type
   body                   = each.value.body

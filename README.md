@@ -107,27 +107,11 @@ object({
 
 Default: `{}`
 
-### <a name="input_role_assignment_name_overrides"></a> [role\_assignment\_name\_overrides](#input\_role\_assignment\_name\_overrides)
-
-Description: Optional. A map of role assignment names to override the auto-generated names produced by the interfaces module.
-
-The map key must match a key in the `role_assignments` variable. The map value must be a valid UUID (the role assignment resource name in Azure is a GUID).
-
-Example:
-```hcl
-role_assignment_name_overrides = {
-  "roleassignment1" = "00000000-0000-0000-0000-000000000001"
-}
-```
-
-Type: `map(string)`
-
-Default: `{}`
-
 ### <a name="input_role_assignments"></a> [role\_assignments](#input\_role\_assignments)
 
 Description: Optional. A map of role assignments to create on this resource. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
 
+- `name` - (Optional) The name of the role assignment. If not set, a random UUID will be generated. Must be a valid GUID. Changing this forces the creation of a new resource.
 - `role_definition_id_or_name` - (Required) The ID or name of the role definition to assign to the principal.
 - `principal_id` - (Required) The ID of the principal to assign the role to.
 - `description` - (Optional) The description of the role assignment.
@@ -183,6 +167,7 @@ Type:
 
 ```hcl
 map(object({
+    name                                   = optional(string, null)
     role_definition_id_or_name             = string
     principal_id                           = string
     description                            = optional(string, null)
@@ -256,7 +241,7 @@ The following Modules are called:
 
 Source: Azure/avm-utl-interfaces/azure
 
-Version: 0.5.2
+Version: 0.6.0
 
 <!-- markdownlint-disable-next-line MD041 -->
 ## Data Collection
