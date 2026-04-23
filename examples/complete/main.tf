@@ -71,18 +71,16 @@ module "resource_group" {
     kind = "CanNotDelete"
     name = "myCustomLockName"
   }
-  role_assignment_name_overrides = {
-    "roleassignment1"  = "dfd0b1f9-3f46-32ba-e9e1-4b5591aa8337"
-    "role_assignment2" = "bd83f8d6-f0a2-1584-9e3c-f31c185847ea"
-  }
   role_assignments = {
     "roleassignment1" = {
+      name                       = "dfd0b1f9-3f46-32ba-e9e1-4b5591aa8337"
       principal_id               = azapi_resource.dep_uai.output.properties.principalId
       role_definition_id_or_name = "Reader"
       principal_type             = "ServicePrincipal"
       description                = "Reader role assignment for the user assigned identity"
     },
     "role_assignment2" = {
+      name                             = "bd83f8d6-f0a2-1584-9e3c-f31c185847ea"
       role_definition_id_or_name       = "Storage Blob Data Reader"
       principal_id                     = azapi_resource.dep_uai.output.properties.principalId
       skip_service_principal_aad_check = false
