@@ -65,8 +65,9 @@ resource "azapi_resource" "dep_uai" {
 module "resource_group" {
   source = "../../"
 
-  location = module.regions.regions[random_integer.region_index.result].name
-  name     = module.naming.resource_group.name_unique
+  location           = module.regions.regions[random_integer.region_index.result].name
+  name               = module.naming.resource_group.name_unique
+  ignore_tag_changes = true
   lock = {
     kind = "CanNotDelete"
     name = "myCustomLockName"

@@ -9,6 +9,8 @@ module "interfaces" {
 }
 
 resource "azapi_resource" "this" {
+  count = var.ignore_tag_changes ? 0 : 1
+
   location  = var.location
   name      = var.name
   parent_id = "/subscriptions/${data.azapi_client_config.current.subscription_id}"
@@ -35,13 +37,53 @@ resource "azapi_resource" "this" {
     read   = var.timeouts.read
     update = var.timeouts.update
   }
+
+}
+
+resource "azapi_resource" "this_ignore_tag_changes" {
+  count = var.ignore_tag_changes ? 1 : 0
+
+  location  = var.location
+  name      = var.name
+  parent_id = "/subscriptions/${data.azapi_client_config.current.subscription_id}"
+  type      = "Microsoft.Resources/resourceGroups@2025-04-01"
+  body = {
+    properties = {}
+    managedBy  = var.managed_by
+  }
+  create_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
+  delete_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
+  read_headers   = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
+  response_export_values = [
+    "id",
+    "name",
+    "location",
+  ]
+  retry          = var.retry
+  tags           = var.tags
+  update_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
+
+  timeouts {
+    create = var.timeouts.create
+    delete = var.timeouts.delete
+    read   = var.timeouts.read
+    update = var.timeouts.update
+  }
+}
+
+locals {
+  resource_group = one(concat(azapi_resource.this[*], azapi_resource.this_ignore_tag_changes[*]))
 }
 
 resource "azapi_resource" "lock" {
   count = var.lock != null ? 1 : 0
 
   name                   = coalesce(module.interfaces.lock_azapi.name, "lock-${var.lock.kind}")
-  parent_id              = azapi_resource.this.id
+  parent_id              = local.resource_group.id
   type                   = module.interfaces.lock_azapi.type
   body                   = module.interfaces.lock_azapi.body
   create_headers         = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
@@ -63,7 +105,7 @@ resource "azapi_resource" "role_assignments" {
   for_each = module.interfaces.role_assignments_azapi
 
   name                   = each.value.name
-  parent_id              = azapi_resource.this.id
+  parent_id              = local.resource_group.id
   type                   = each.value.type
   body                   = each.value.body
   create_headers         = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
@@ -83,7 +125,7 @@ resource "azapi_resource" "role_assignments" {
 
 moved {
   from = azurerm_resource_group.this
-  to   = azapi_resource.this
+  to   = azapi_resource.this[0]
 }
 
 moved {

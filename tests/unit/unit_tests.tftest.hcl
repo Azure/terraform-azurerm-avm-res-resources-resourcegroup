@@ -156,3 +156,23 @@ run "test_role_assignment_role_definition_id_validation_succeeds" {
     var.role_assignments
   ]
 }
+
+run "test_ignore_tag_changes_enabled" {
+  command = plan
+  variables {
+    ignore_tag_changes = true
+    tags = {
+      Environment = "Test"
+    }
+  }
+
+  assert {
+    condition     = length(azapi_resource.this) == 0
+    error_message = "Expected default resource to be disabled when ignore_tag_changes is true"
+  }
+
+  assert {
+    condition     = length(azapi_resource.this_ignore_tag_changes) == 1
+    error_message = "Expected ignore-tag-changes resource to be enabled when ignore_tag_changes is true"
+  }
+}

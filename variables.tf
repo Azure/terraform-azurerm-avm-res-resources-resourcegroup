@@ -30,6 +30,13 @@ DESCRIPTION
   nullable    = false
 }
 
+variable "ignore_tag_changes" {
+  type        = bool
+  default     = false
+  description = "(Optional) Whether to ignore changes to `tags` after resource group creation."
+  nullable    = false
+}
+
 variable "lock" {
   type = object({
     kind = string
