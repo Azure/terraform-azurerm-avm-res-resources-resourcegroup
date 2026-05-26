@@ -33,7 +33,11 @@ DESCRIPTION
 variable "ignore_tag_changes" {
   type        = bool
   default     = false
-  description = "(Optional) Whether to ignore changes to `tags` after resource group creation."
+  description = <<DESCRIPTION
+(Optional) Whether to ignore changes to `tags` after resource group creation.
+
+WARNING: Changing this value after the resource group has been created forces replacement of the resource group because Terraform must switch between two different resource definitions.
+DESCRIPTION
   nullable    = false
 }
 
