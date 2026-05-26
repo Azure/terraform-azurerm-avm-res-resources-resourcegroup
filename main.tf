@@ -37,7 +37,6 @@ resource "azapi_resource" "this" {
     read   = var.timeouts.read
     update = var.timeouts.update
   }
-
 }
 
 resource "azapi_resource" "this_ignore_tag_changes" {
@@ -63,15 +62,15 @@ resource "azapi_resource" "this_ignore_tag_changes" {
   tags           = var.tags
   update_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
 
-  lifecycle {
-    ignore_changes = [tags]
-  }
-
   timeouts {
     create = var.timeouts.create
     delete = var.timeouts.delete
     read   = var.timeouts.read
     update = var.timeouts.update
+  }
+
+  lifecycle {
+    ignore_changes = [tags]
   }
 }
 
