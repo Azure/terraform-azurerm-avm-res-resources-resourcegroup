@@ -19,17 +19,13 @@ resource "azapi_resource" "this" {
     properties = {}
     managedBy  = var.managed_by
   }
-  create_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
-  delete_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
-  read_headers   = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   response_export_values = [
     "id",
     "name",
     "location",
   ]
-  retry          = var.retry
-  tags           = var.tags
-  update_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
+  retry = var.retry
+  tags  = var.tags
 
   timeouts {
     create = var.timeouts.create
@@ -50,17 +46,13 @@ resource "azapi_resource" "this_ignore_tag_changes" {
     properties = {}
     managedBy  = var.managed_by
   }
-  create_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
-  delete_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
-  read_headers   = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   response_export_values = [
     "id",
     "name",
     "location",
   ]
-  retry          = var.retry
-  tags           = var.tags
-  update_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
+  retry = var.retry
+  tags  = var.tags
 
   timeouts {
     create = var.timeouts.create
@@ -85,12 +77,8 @@ resource "azapi_resource" "lock" {
   parent_id              = local.resource_group.id
   type                   = module.interfaces.lock_azapi.type
   body                   = module.interfaces.lock_azapi.body
-  create_headers         = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
-  delete_headers         = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
-  read_headers           = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   response_export_values = []
   retry                  = var.retry
-  update_headers         = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
 
   timeouts {
     create = var.timeouts.create
@@ -107,12 +95,8 @@ resource "azapi_resource" "role_assignments" {
   parent_id              = local.resource_group.id
   type                   = each.value.type
   body                   = each.value.body
-  create_headers         = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
-  delete_headers         = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
-  read_headers           = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   response_export_values = []
   retry                  = var.retry
-  update_headers         = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
 
   timeouts {
     create = var.timeouts.create
