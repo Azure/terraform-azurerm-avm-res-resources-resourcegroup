@@ -47,6 +47,3 @@ module "resource_group" {
   location = module.regions.regions[random_integer.region_index.result].name
   name     = module.naming.resource_group.name_unique
 }
-
-
-
