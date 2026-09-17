@@ -34,7 +34,8 @@ module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
   version = "0.12.0"
 
-  is_recommended = true
+  enable_telemetry = false
+  is_recommended   = true
 }
 
 # This allows us to randomize the region for the resource group.
@@ -67,6 +68,7 @@ module "resource_group" {
 
   location           = module.regions.regions[random_integer.region_index.result].name
   name               = module.naming.resource_group.name_unique
+  enable_telemetry   = false
   ignore_tag_changes = true
   lock = {
     kind = "CanNotDelete"
