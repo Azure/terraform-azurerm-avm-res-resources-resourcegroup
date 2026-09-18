@@ -27,7 +27,7 @@ module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
   version = "0.12.0"
 
-  enable_telemetry = false
+  enable_telemetry = var.enable_telemetry
   is_recommended   = true
 }
 
@@ -55,6 +55,6 @@ module "resource_group" {
 
   location         = module.regions.regions[random_integer.region_index.result].name
   name             = module.naming.resource_group.name_unique
-  enable_telemetry = false
+  enable_telemetry = var.enable_telemetry
   managed_by       = azapi_resource.manager.id
 }
