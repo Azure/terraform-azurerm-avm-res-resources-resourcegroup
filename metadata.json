@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/azure-verified-modules-tools/main/src/Avm.Authoring/Resources/Schemas/v1/avm-module-metadata.schema.json",
+  "moduleDisplayName": "Resource Group",
+  "moduleDescription": "AVM Resource Module for Resource Group",
+  "canonicalType": "Microsoft.Resources/resourceGroups",
+  "owners": [
+    "Jfolberth"
+  ],
+  "telemetryIdPrefix": "46d3xtrf.res.bcd1b59"
+}
