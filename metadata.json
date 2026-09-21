@@ -6,5 +6,8 @@
   "owners": [
     "Jfolberth"
   ],
-  "telemetryIdPrefix": "46d3xtrf.res.bcd1b59"
+  "telemetryIdPrefix": "46d3xtrf.res.bcd1b59",
+  "alternativeNames": [
+    "RG"
+  ]
 }
