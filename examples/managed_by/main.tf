@@ -19,14 +19,15 @@ data "azapi_client_config" "current" {}
 
 # Importing the Azure naming module to ensure resources have unique CAF compliant names.
 module "naming" {
-  source  = "Azure/naming/azurerm"
-  version = "0.4.3"
+  source  = "Azure/avm-utl-naming/azure"
+  version = "0.2.0"
 }
 
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.12.0"
+  version = "0.13.0"
 
+  location         = var.location
   enable_telemetry = var.enable_telemetry
   is_recommended   = true
 }
@@ -52,6 +53,9 @@ resource "azapi_resource" "manager" {
 
 module "resource_group" {
   source = "../../"
+  providers = {
+    azapi = azapi
+  }
 
   location         = module.regions.regions[random_integer.region_index.result].name
   name             = module.naming.resource_group.name_unique

@@ -33,16 +33,14 @@ mock_provider "azapi" {
   }
 }
 
-mock_provider "modtm" {}
-
 mock_provider "random" {}
 
 run "test_valid_resource_group_name" {
   command = plan
 
   providers = {
-    azapi  = azapi
-    modtm  = modtm
+    azapi = azapi
+
     random = random
   }
 
@@ -55,8 +53,8 @@ run "test_invalid_resource_group_name_end_with_period" {
   command = plan
 
   providers = {
-    azapi  = azapi
-    modtm  = modtm
+    azapi = azapi
+
     random = random
   }
 
@@ -73,8 +71,8 @@ run "test_invalid_resource_group_name_greater_then_90_characters" {
   command = plan
 
   providers = {
-    azapi  = azapi
-    modtm  = modtm
+    azapi = azapi
+
     random = random
   }
 
@@ -90,8 +88,8 @@ run "test_invalid_resource_group_name_empty" {
   command = plan
 
   providers = {
-    azapi  = azapi
-    modtm  = modtm
+    azapi = azapi
+
     random = random
   }
 
@@ -107,8 +105,8 @@ run "test_invalid_resource_group_name_null" {
   command = plan
 
   providers = {
-    azapi  = azapi
-    modtm  = modtm
+    azapi = azapi
+
     random = random
   }
 
@@ -124,8 +122,8 @@ run "test_lock_name_not_provided_value" {
   command = plan
 
   providers = {
-    azapi  = azapi
-    modtm  = modtm
+    azapi = azapi
+
     random = random
   }
 
@@ -139,8 +137,8 @@ run "test_lock_name_provided_value" {
   command = plan
 
   providers = {
-    azapi  = azapi
-    modtm  = modtm
+    azapi = azapi
+
     random = random
   }
 
@@ -161,8 +159,8 @@ run "test_lock_kind_matches_allowed_values" {
   command = plan
 
   providers = {
-    azapi  = azapi
-    modtm  = modtm
+    azapi = azapi
+
     random = random
   }
 
@@ -176,8 +174,8 @@ run "test_lock_kind_validation_succeeds" {
   command = plan
 
   providers = {
-    azapi  = azapi
-    modtm  = modtm
+    azapi = azapi
+
     random = random
   }
 
@@ -196,8 +194,8 @@ run "test_role_assignment_role_definition_name" {
   command = plan
 
   providers = {
-    azapi  = azapi
-    modtm  = modtm
+    azapi = azapi
+
     random = random
   }
 
@@ -215,8 +213,8 @@ run "test_role_assignment_role_definition_id" {
   command = plan
 
   providers = {
-    azapi  = azapi
-    modtm  = modtm
+    azapi = azapi
+
     random = random
   }
 
@@ -234,8 +232,8 @@ run "test_role_assignment_role_definition_id_validation_succeeds" {
   command = plan
 
   providers = {
-    azapi  = azapi
-    modtm  = modtm
+    azapi = azapi
+
     random = random
   }
 
@@ -257,8 +255,8 @@ run "test_ignore_tag_changes_enabled" {
   command = plan
 
   providers = {
-    azapi  = azapi
-    modtm  = modtm
+    azapi = azapi
+
     random = random
   }
 
