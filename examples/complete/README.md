@@ -68,9 +68,6 @@ resource "azapi_resource" "dep_uai" {
 
 module "resource_group" {
   source = "../../"
-  providers = {
-    azapi = azapi
-  }
 
   location           = module.regions.regions[random_integer.region_index.result].name
   name               = module.naming.resource_group.name_unique
