@@ -20,7 +20,7 @@ provider "azapi" {}
 # Importing the Azure naming module to ensure resources have unique CAF compliant names.
 module "naming" {
   source  = "Azure/avm-utl-naming/azure"
-  version = "0.2.0"
+  version = "0.3.0"
 }
 
 module "regions" {
@@ -42,7 +42,7 @@ module "resource_group" {
   source = "../../"
 
   location           = module.regions.regions[random_integer.region_index.result].name
-  name               = module.naming.resource_group.name_unique
+  name               = module.naming.names.resource_group.name_unique
   enable_telemetry   = var.enable_telemetry
   ignore_tag_changes = true
   tags = {

@@ -29,7 +29,7 @@ data "azapi_client_config" "current" {}
 # Importing the Azure naming module to ensure resources have unique CAF compliant names.
 module "naming" {
   source  = "Azure/avm-utl-naming/azure"
-  version = "0.2.0"
+  version = "0.3.0"
 }
 
 module "regions" {
@@ -49,7 +49,7 @@ resource "random_integer" "region_index" {
 
 resource "azapi_resource" "dep" {
   location  = module.regions.regions[random_integer.region_index.result].name
-  name      = "${module.naming.resource_group.name_unique}-dep"
+  name      = "${module.naming.names.resource_group.name_unique}-dep"
   parent_id = "/subscriptions/${data.azapi_client_config.current.subscription_id}"
   type      = "Microsoft.Resources/resourceGroups@2025-04-01"
   body = {
@@ -59,7 +59,7 @@ resource "azapi_resource" "dep" {
 
 resource "azapi_resource" "dep_uai" {
   location               = azapi_resource.dep.location
-  name                   = module.naming.user_assigned_identity.name_unique
+  name                   = module.naming.names.user_assigned_identity.name_unique
   parent_id              = azapi_resource.dep.id
   type                   = "Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31"
   body                   = {}
@@ -70,7 +70,7 @@ module "resource_group" {
   source = "../../"
 
   location           = module.regions.regions[random_integer.region_index.result].name
-  name               = module.naming.resource_group.name_unique
+  name               = module.naming.names.resource_group.name_unique
   enable_telemetry   = var.enable_telemetry
   ignore_tag_changes = true
   lock = {
@@ -191,7 +191,7 @@ The following Modules are called:
 
 Source: Azure/avm-utl-naming/azure
 
-Version: 0.2.0
+Version: 0.3.0
 
 ### <a name="module_regions"></a> [regions](#module\_regions)
 
