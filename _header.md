@@ -28,5 +28,6 @@ an explicit state migration or import may be required.
 For role assignments created by older AzureRM-based versions, set each
 `role_assignments` entry's `name` to its existing assignment GUID before
 upgrading. Otherwise, a newly generated name may replace the assignment.
-Also review lock notes: older versions supplied notes that this module no
-longer specifies.
+The lock body now includes `notes = null`, where v0.4.0 omitted notes.
+Older AzureRM-based versions supplied lock notes. Azure's handling of this
+null has not been verified; review existing notes and the upgrade plan.
