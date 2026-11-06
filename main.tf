@@ -1,9 +1,9 @@
 module "interfaces" {
   source  = "Azure/avm-utl-interfaces/azure"
-  version = "0.9.0"
+  version = "0.10.0"
 
-  location                         = var.location
   enable_telemetry                 = var.enable_telemetry
+  location                         = var.location
   lock                             = var.lock
   role_assignment_definition_scope = "/subscriptions/${data.azapi_client_config.current.subscription_id}"
   role_assignments                 = var.role_assignments
@@ -109,6 +109,11 @@ resource "azapi_resource" "role_assignments" {
 
 moved {
   from = azurerm_resource_group.this
+  to   = azapi_resource.this
+}
+
+moved {
+  from = azapi_resource.this
   to   = azapi_resource.this[0]
 }
 
