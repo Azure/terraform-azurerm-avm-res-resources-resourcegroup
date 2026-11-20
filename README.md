@@ -53,7 +53,6 @@ The following resources are used by this module:
 - [azapi_resource.this](https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource) (resource)
 - [azapi_resource.this_ignore_tag_changes](https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource) (resource)
 - [terraform_data.telemetry](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) (resource)
-- [azapi_client_config.current](https://registry.terraform.io/providers/Azure/azapi/latest/docs/data-sources/client_config) (data source)
 - [azapi_client_config.telemetry](https://registry.terraform.io/providers/Azure/azapi/latest/docs/data-sources/client_config) (data source)
 
 <!-- markdownlint-disable MD013 -->
@@ -70,6 +69,12 @@ Type: `string`
 ### <a name="input_name"></a> [name](#input\_name)
 
 Description: Required. The name of the this resource.
+
+Type: `string`
+
+### <a name="input_parent_id"></a> [parent\_id](#input\_parent\_id)
+
+Description: The fully-qualified ARM resource ID of the subscription in which the resource group will be created.
 
 Type: `string`
 

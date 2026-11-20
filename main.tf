@@ -5,7 +5,7 @@ module "interfaces" {
   enable_telemetry                 = var.enable_telemetry
   location                         = var.location
   lock                             = var.lock
-  role_assignment_definition_scope = "/subscriptions/${data.azapi_client_config.current.subscription_id}"
+  role_assignment_definition_scope = var.parent_id
   role_assignments                 = var.role_assignments
 }
 
@@ -14,7 +14,7 @@ resource "azapi_resource" "this" {
 
   location  = var.location
   name      = var.name
-  parent_id = "/subscriptions/${data.azapi_client_config.current.subscription_id}"
+  parent_id = var.parent_id
   type      = "Microsoft.Resources/resourceGroups@2025-04-01"
   body = {
     properties = {}
@@ -41,7 +41,7 @@ resource "azapi_resource" "this_ignore_tag_changes" {
 
   location  = var.location
   name      = var.name
-  parent_id = "/subscriptions/${data.azapi_client_config.current.subscription_id}"
+  parent_id = var.parent_id
   type      = "Microsoft.Resources/resourceGroups@2025-04-01"
   body = {
     properties = {}

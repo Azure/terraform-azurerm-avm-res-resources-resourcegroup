@@ -15,6 +15,8 @@ terraform {
 
 provider "azapi" {}
 
+data "azapi_client_config" "current" {}
+
 # Configure AzureRM in the caller only while upgrading from a module version that used it.
 
 # Importing the Azure naming module to ensure resources have unique CAF compliant names.
@@ -43,5 +45,6 @@ module "resource_group" {
 
   location         = module.regions.regions[random_integer.region_index.result].name
   name             = module.naming.names.resource_group.name_unique
+  parent_id        = "/subscriptions/${data.azapi_client_config.current.subscription_id}"
   enable_telemetry = var.enable_telemetry
 }

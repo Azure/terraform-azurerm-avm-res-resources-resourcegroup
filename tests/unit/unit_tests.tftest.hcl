@@ -1,20 +1,13 @@
 variables {
-  location = "eastus"
-  name     = "rg-test"
+  location  = "eastus"
+  name      = "rg-test"
+  parent_id = "/subscriptions/00000000-0000-0000-0000-000000000000"
   lock = {
     kind = "CanNotDelete"
   }
 }
 
 mock_provider "azapi" {
-  mock_data "azapi_client_config" {
-    defaults = {
-      subscription_id          = "00000000-0000-0000-0000-000000000000"
-      subscription_resource_id = "/subscriptions/00000000-0000-0000-0000-000000000000"
-      tenant_id                = "00000000-0000-0000-0000-000000000000"
-    }
-  }
-
   mock_data "azapi_resource_list" {
     defaults = {
       output = {
@@ -29,6 +22,11 @@ mock_provider "azapi" {
           },
         ]
       }
+    }
+  }
+  mock_data "azapi_client_config" {
+    defaults = {
+      subscription_resource_id = "/subscriptions/00000000-0000-0000-0000-000000000000"
     }
   }
 }
@@ -47,6 +45,47 @@ run "test_valid_resource_group_name" {
   variables {
     name = "rg-niceresourcegroup-name"
   }
+
+  assert {
+    condition     = azapi_resource.this[0].parent_id == var.parent_id
+    error_message = "The resource group should use the configured parent subscription."
+  }
+}
+
+run "test_parent_id_override" {
+  command = plan
+
+  providers = {
+    azapi  = azapi
+    random = random
+  }
+
+  variables {
+    parent_id          = "/subscriptions/11111111-1111-1111-1111-111111111111"
+    ignore_tag_changes = true
+  }
+
+  assert {
+    condition     = azapi_resource.this_ignore_tag_changes[0].parent_id == var.parent_id
+    error_message = "The ignore-tag-changes resource should use the configured parent subscription."
+  }
+}
+
+run "test_invalid_parent_id" {
+  command = plan
+
+  providers = {
+    azapi  = azapi
+    random = random
+  }
+
+  variables {
+    parent_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-test"
+  }
+
+  expect_failures = [
+    var.parent_id
+  ]
 }
 
 run "test_invalid_resource_group_name_end_with_period" {

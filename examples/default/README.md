@@ -22,6 +22,8 @@ terraform {
 
 provider "azapi" {}
 
+data "azapi_client_config" "current" {}
+
 # Configure AzureRM in the caller only while upgrading from a module version that used it.
 
 # Importing the Azure naming module to ensure resources have unique CAF compliant names.
@@ -50,6 +52,7 @@ module "resource_group" {
 
   location         = module.regions.regions[random_integer.region_index.result].name
   name             = module.naming.names.resource_group.name_unique
+  parent_id        = "/subscriptions/${data.azapi_client_config.current.subscription_id}"
   enable_telemetry = var.enable_telemetry
 }
 ```
@@ -70,6 +73,7 @@ The following requirements are needed by this module:
 The following resources are used by this module:
 
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
+- [azapi_client_config.current](https://registry.terraform.io/providers/Azure/azapi/latest/docs/data-sources/client_config) (data source)
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
