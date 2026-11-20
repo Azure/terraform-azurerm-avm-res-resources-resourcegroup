@@ -56,6 +56,7 @@ module "resource_group" {
 
   location         = module.regions.regions[random_integer.region_index.result].name
   name             = module.naming.names.resource_group.name_unique
+  parent_id        = "/subscriptions/${data.azapi_client_config.current.subscription_id}"
   enable_telemetry = var.enable_telemetry
   managed_by       = azapi_resource.manager.id
 }

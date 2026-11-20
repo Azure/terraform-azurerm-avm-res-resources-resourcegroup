@@ -19,6 +19,17 @@ variable "name" {
   }
 }
 
+variable "parent_id" {
+  type        = string
+  description = "The fully-qualified ARM resource ID of the subscription in which the resource group will be created."
+  nullable    = false
+
+  validation {
+    condition     = can(provider::azapi::parse_resource_id("Microsoft.Resources/subscriptions", var.parent_id))
+    error_message = "`parent_id` must be a valid subscription resource ID."
+  }
+}
+
 variable "enable_telemetry" {
   type        = bool
   default     = true
