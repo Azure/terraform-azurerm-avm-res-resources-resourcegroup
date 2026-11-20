@@ -276,4 +276,9 @@ run "test_ignore_tag_changes_enabled" {
     condition     = length(azapi_resource.this_ignore_tag_changes) == 1
     error_message = "Expected ignore-tag-changes resource to be enabled when ignore_tag_changes is true"
   }
+
+  assert {
+    condition     = !contains(keys(local.resource_group), "retry")
+    error_message = "Expected the resource_group local to exclude provider deprecated retry attributes"
+  }
 }
