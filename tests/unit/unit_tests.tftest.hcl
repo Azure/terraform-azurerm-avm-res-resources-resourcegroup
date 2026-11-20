@@ -49,6 +49,88 @@ run "test_valid_resource_group_name" {
   }
 }
 
+run "test_default_resource_output_shape" {
+  command = plan
+
+  providers = {
+    azapi = azapi
+
+    random = random
+  }
+
+  variables {
+    tags = {
+      Environment = "Test"
+    }
+  }
+
+  assert {
+    condition = alltrue([
+      for key in [
+        "id",
+        "location",
+        "name",
+        "tags",
+        "body",
+        "output",
+        "parent_id",
+        "type",
+        "identity",
+        "timeouts",
+        "retry",
+        "response_export_values",
+        "create_headers",
+        "create_query_parameters",
+        "delete_headers",
+        "delete_query_parameters",
+        "read_headers",
+        "read_query_parameters",
+        "update_headers",
+        "update_query_parameters",
+        "ignore_casing",
+        "ignore_missing_property",
+        "ignore_null_property",
+        "ignore_other_items_in_list",
+        "list_unique_id_property",
+        "locks",
+        "replace_triggers_external_values",
+        "replace_triggers_refs",
+        "schema_validation_enabled",
+        "sensitive_body_version",
+        "ignore_body_changes",
+        "sensitive_body",
+        "resource",
+      ] :
+      contains(keys(output.resource), key)
+    ])
+    error_message = "Expected the default public resource output to preserve its historical shape"
+  }
+
+  assert {
+    condition     = output.resource.tags == var.tags && output.resource.resource == null
+    error_message = "Expected default tags to be preserved and the nested resource override to remain null"
+  }
+}
+
+run "test_null_retry" {
+  command = plan
+
+  providers = {
+    azapi = azapi
+
+    random = random
+  }
+
+  variables {
+    retry = null
+  }
+
+  assert {
+    condition     = output.resource.retry == null
+    error_message = "Expected a null retry configuration to remain null in the public resource output"
+  }
+}
+
 run "test_invalid_resource_group_name_end_with_period" {
   command = plan
 
@@ -262,6 +344,7 @@ run "test_ignore_tag_changes_enabled" {
 
   variables {
     ignore_tag_changes = true
+    retry              = null
     tags = {
       Environment = "Test"
     }
@@ -275,5 +358,28 @@ run "test_ignore_tag_changes_enabled" {
   assert {
     condition     = length(azapi_resource.this_ignore_tag_changes) == 1
     error_message = "Expected ignore-tag-changes resource to be enabled when ignore_tag_changes is true"
+  }
+
+  assert {
+    condition     = local.resource_group.retry == null ? true : !contains(keys(local.resource_group.retry), "randomization_factor") && !contains(keys(local.resource_group.retry), "multiplier")
+    error_message = "Expected the resource projection to exclude deprecated retry attributes"
+  }
+
+  assert {
+    condition     = output.resource.retry == null
+    error_message = "Expected a null retry configuration to remain null when ignore_tag_changes is true"
+  }
+
+  assert {
+    condition = alltrue([
+      for key in ["body", "output", "parent_id", "type", "identity", "timeouts", "response_export_values"] :
+      contains(keys(output.resource), key)
+    ])
+    error_message = "Expected the public resource output to preserve provider resource fields"
+  }
+
+  assert {
+    condition     = output.resource.tags == null && output.resource.resource.tags == null
+    error_message = "Expected both tag projections to be suppressed when ignore_tag_changes is true"
   }
 }
