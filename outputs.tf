@@ -10,12 +10,12 @@ output "name" {
 
 output "resource" {
   description = "This is the full output for the resource group."
-  value = {
-    id       = local.resource_group.id
-    location = local.resource_group.location
-    name     = local.resource_group.name
-    tags     = var.ignore_tag_changes ? null : local.resource_group.tags
-  }
+  value = merge(local.resource_group, {
+    tags = var.ignore_tag_changes ? null : local.resource_group.tags
+    resource = var.ignore_tag_changes ? {
+      tags = null
+    } : null
+  })
 }
 
 output "resource_id" {
