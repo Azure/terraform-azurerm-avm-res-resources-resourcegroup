@@ -67,10 +67,6 @@ resource "azapi_resource" "this_ignore_tag_changes" {
   }
 }
 
-locals {
-  resource_group = one(concat(azapi_resource.this[*], azapi_resource.this_ignore_tag_changes[*]))
-}
-
 resource "azapi_resource" "lock" {
   count = var.lock != null ? 1 : 0
 

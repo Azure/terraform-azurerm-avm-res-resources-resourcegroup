@@ -12,9 +12,9 @@ output "resource" {
   description = "This is the full output for the resource group."
   value = merge(local.resource_group, {
     tags = var.ignore_tag_changes ? null : local.resource_group.tags
-    resource = var.ignore_tag_changes ? merge(try(local.resource_group.resource, {}), {
+    resource = var.ignore_tag_changes ? {
       tags = null
-    }) : try(local.resource_group.resource, null)
+    } : null
   })
 }
 
